@@ -3,31 +3,28 @@
 <head>
   <meta charset="utf-8">
   <title>Turtlediary | 100+ Free Educational Games for kids </title>
-  <meta name="description" content="Turtlediary Baby Games is a unique interactive world for 0 to 6 year olds. free games for 2,3,4 year olds. play educational and funny kids games online at Turtlediary, Play games such as knowledge games, toddler games, learing games, vocabulary games, brain games, alphabet games, logic games, music games, memory games, Try it now!" />
-
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="full-screen" content="yes"/>
   <meta name="screen-orientation" content="portrait"/>
   <meta name="x5-fullscreen" content="true"/>
   <meta name="360-fullscreen" content="true"/>
-  
   <meta name="renderer" content="webkit"/>
   <meta name="force-rendering" content="webkit"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
   
   <link rel="stylesheet" type="text/css" href="style-desktop.81ede.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
-  <meta name="google-adsense-account" content="ca-pub-7319484910540489">
 
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #333;
+      background-color: #333; /* 背景深色，更像游戏机 */
       overflow-x: hidden;
+      font-family: Arial, sans-serif;
     }
-    /* 游戏外层包装，用于居中和控制溢出 */
+    /* 1. 外层包装：负责居中和溢出隐藏 */
     #GameWrapper {
       width: 100%;
       display: flex;
@@ -35,64 +32,61 @@
       align-items: flex-start;
       overflow: hidden;
     }
-    /* 游戏本体容器，应用缩放的核心 */
+    /* 2. 游戏容器：缩放的核心 */
     #GameDiv {
       position: relative;
-      transform-origin: top center;
+      transform-origin: top center; /* 从顶部中心点开始缩放 */
     }
     .header {
       text-align: center;
       color: white;
-      font-family: Arial, sans-serif;
       font-size: 18px;
       margin: 10px 0;
     }
   </style>
 
   <script>
-    // --- 1. 密码保护逻辑 ---
+    // --- 访问密码逻辑 ---
     (function() {
         var password = prompt("此页面受保护，请输入访问密码：");
         if (password !== "123456") {
-            alert("密码错误，无法访问！");
+            alert("密码错误！");
             window.location.href = "about:blank"; 
         }
     })();
 
-    // --- 2. 自适应缩放逻辑 ---
+    // --- 智能自适应逻辑 ---
     function resizeGame() {
         var gameDiv = document.getElementById('GameDiv');
         var container = document.getElementById('GameWrapper');
         if (!gameDiv || !container) return;
 
-        var designWidth = 1280;
-        var designHeight = 720;
+        var designWidth = 1280;  // Cocos 原始设计宽
+        var designHeight = 720;  // Cocos 原始设计高
         
-        // 设定基础缩放比例为 68%
-        var baseScale = 0.68;
-        
-        // 获取浏览器当前宽度
+        var baseScale = 0.68;    // 你要求的基础缩放比例
         var windowWidth = window.innerWidth;
         
-        // 如果 68% 缩放后仍然宽于屏幕，则进一步缩小以适应屏幕宽度
+        // 计算最终比例：如果窗口宽度装不下 68% 的游戏，就按窗口比例缩得更小
         var finalScale = Math.min(baseScale, windowWidth / designWidth);
         
-        // 应用宽高和缩放
+        // 应用 CSS 变换
         gameDiv.style.width = designWidth + "px";
         gameDiv.style.height = designHeight + "px";
         gameDiv.style.transform = "scale(" + finalScale + ")";
         
-        // 动态调整外层容器高度，消除缩放产生的多余空白
+        // 关键：动态计算外层高度，防止缩放后下方留出巨大的黑边
         container.style.height = (designHeight * finalScale) + "px";
     }
 
+    // 监听窗口变化
     window.addEventListener('resize', resizeGame);
     window.addEventListener('DOMContentLoaded', resizeGame);
   </script>
 </head>
 
 <body>
-<h1 class="header">Turtlediary | 100+ Free Educational Games for kids</h1>
+<h1 class="header">Turtlediary | Educational Games</h1>
 
 <div id="GameWrapper">
   <div id="GameDiv">
@@ -110,32 +104,26 @@
 
 <script type="text/javascript">
 (function () {
-    if (typeof VConsole !== 'undefined') {
-        window.vConsole = new VConsole();
-    }
-
     var debug = window._CCSettings.debug;
     var splash = document.getElementById('splash');
     splash.style.display = 'block';
 
     function loadScript (moduleName, cb) {
-      function scriptLoaded () {
-          document.body.removeChild(domScript);
-          domScript.removeEventListener('load', scriptLoaded, false);
-          cb && cb();
-      };
       var domScript = document.createElement('script');
       domScript.async = true;
       domScript.src = moduleName;
-      domScript.addEventListener('load', scriptLoaded, false);
+      domScript.addEventListener('load', function scriptLoaded () {
+          document.body.removeChild(domScript);
+          domScript.removeEventListener('load', scriptLoaded, false);
+          cb && cb();
+      }, false);
       document.body.appendChild(domScript);
     }
 
     loadScript(debug ? 'cocos2d-js.304c8.js' : 'cocos2d-js-min.js', function () {
       if (typeof CC_PHYSICS_BUILTIN !== 'undefined' && (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON)) {
         loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
-      }
-      else {
+      } else {
         window.boot();
       }
     });
