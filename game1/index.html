@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cocos Creator | 10合1小游戏合集</title>
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+  <link rel="stylesheet" type="text/css" href="style-mobile.25fc5.css"/>
+
+  <style>
+    html, body {
+      background-color: #1a1a1a;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column; 
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 标题样式 */
+    .game-title {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: bold;
+      font-family: "Microsoft YaHei", sans-serif;
+      margin-bottom: 2px; 
+      letter-spacing: 4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    #GameDiv {
+      position: relative;
+      /* 这里的 width 会被 JS 覆盖，设为自动 */
+      width: auto; 
+      max-width: 100vw;
+      max-height: 100vh;
+      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      background-color: #000;
+      border: 2px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #GameCanvas {
+      width: 100% !important;
+      height: 100% !important;
+      outline: none;
+    }
+
+    #splash {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: #171717; z-index: 5;
+    }
+
+    /* 手机端隐藏标题（可选，为了给游戏更多空间） */
+    @media screen and (max-width: 1024px) {
+      .game-title {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-title">10合1小游戏合集</div>
+
+  <div id="GameDiv">
+    <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+    <div id="splash">
+      <div class="progress-bar stripes">
+        <span style="width: 0%"></span>
+      </div>
+    </div>
+  </div>
+
+<script src="src/settings.a0aa2.js" charset="utf-8"></script>
+<script src="main.1713e.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+(function () {
+    var splash = document.getElementById('splash');
+    splash.style.display = 'block';
+
+    function syncGameSize() {
+        if (typeof cc !== 'undefined' && cc.view) {
+            var container = document.getElementById('GameDiv');
+            if (container) {
+                var designRatio = 1280 / 720;
+                
+                // --- 核心修改：设备检测逻辑 ---
+                // 如果屏幕宽度小于 1024px（平板和手机），缩放系数为 1 (100%)
+                // 否则（PC端），缩放系数为 0.65 (65%)
+                var isMobileOrTablet = window.innerWidth <= 1024;
+                var scaleFactor = isMobileOrTablet ? 1.0 : 0.65;
+                
+                var targetWidth = window.innerWidth * scaleFactor;
+                var targetHeight = targetWidth / designRatio;
+
+                // 边界检查：防止高度溢出屏幕
+                // 移动端给 95% 的余量，PC端给标题留空间（75%）
+                var heightLimit = isMobileOrTablet ? 0.95 : 0.75;
+                var maxHeight = window.innerHeight * heightLimit;
+
+                if (targetHeight > maxHeight) {
+                    targetHeight = maxHeight;
+                    targetWidth = targetHeight * designRatio;
+                }
+
+                container.style.width = targetWidth + "px";
+                container.style.height = targetHeight + "px";
+
+                var rect = container.getBoundingClientRect();
+                cc.view.setFrameSize(rect.width, rect.height);
+                
+                if (cc.view._resizeEvent) {
+                    cc.view._resizeEvent();
+                }
+            }
+        }
+    }
+
+    function loadScript (moduleName, cb) {
+      var domScript = document.createElement('script');
+      domScript.async = true;
+      domScript.src = moduleName;
+      domScript.onload = () => {
+          document.body.removeChild(domScript);
+          cb && cb();
+      };
+      document.body.appendChild(domScript);
+    }
+
+    var debug = window._CCSettings.debug;
+
+    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.5c3e1.js', function () {
+      if (typeof CC_PHYSICS_BUILTIN !== 'undefined' && (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON)) {
+        loadScript(debug ? 'physics.js' : 'physics-min.7f489.js', window.boot);
+      } else {
+        window.boot();
+      }
+
+      window.addEventListener('resize', syncGameSize);
+      setInterval(syncGameSize, 500);
+      setTimeout(syncGameSize, 500);
+    });
+})();
+</script>
+</body>
+</html>
