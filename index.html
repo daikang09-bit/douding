@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Turtlediary | 100+ Free Educational Games for kids </title>
+  <title>Turtlediary | Educational Games</title>
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="full-screen" content="yes"/>
@@ -20,11 +20,14 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #333; /* 背景深色，更像游戏机 */
-      overflow-x: hidden;
+      background-color: #222;
+      overflow-x: hidden; /* 防止横向滚动条 */
       font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    /* 1. 外层包装：负责居中和溢出隐藏 */
+    /* 核心包装层：确保游戏永远水平居中 */
     #GameWrapper {
       width: 100%;
       display: flex;
@@ -32,21 +35,21 @@
       align-items: flex-start;
       overflow: hidden;
     }
-    /* 2. 游戏容器：缩放的核心 */
+    /* 游戏容器：所有的缩放魔法都在这里 */
     #GameDiv {
       position: relative;
-      transform-origin: top center; /* 从顶部中心点开始缩放 */
+      transform-origin: top center; /* 以顶部中心为缩放原点 */
     }
     .header {
       text-align: center;
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       margin: 10px 0;
     }
   </style>
 
   <script>
-    // --- 访问密码逻辑 ---
+    // --- 访问密码 ---
     (function() {
         var password = prompt("此页面受保护，请输入访问密码：");
         if (password !== "123456") {
@@ -55,38 +58,45 @@
         }
     })();
 
-    // --- 智能自适应逻辑 ---
+    // --- 核心：等比例自适应缩放逻辑 ---
     function resizeGame() {
         var gameDiv = document.getElementById('GameDiv');
-        var container = document.getElementById('GameWrapper');
-        if (!gameDiv || !container) return;
+        var wrapper = document.getElementById('GameWrapper');
+        if (!gameDiv || !wrapper) return;
 
-        var designWidth = 1280;  // Cocos 原始设计宽
-        var designHeight = 720;  // Cocos 原始设计高
+        // 1. 定义 Cocos 导出的原始设计尺寸
+        var designWidth = 1280;
+        var designHeight = 720;
         
-        var baseScale = 0.68;    // 你要求的基础缩放比例
+        // 2. 设定你的基础缩放目标 (68%)
+        var baseScale = 0.68;
+        
+        // 3. 计算浏览器当前允许的最大宽度
         var windowWidth = window.innerWidth;
         
-        // 计算最终比例：如果窗口宽度装不下 68% 的游戏，就按窗口比例缩得更小
+        // 4. 计算最终缩放比例
+        // 如果窗口宽度足够大，就用 68%
+        // 如果窗口宽度变小，就让比例 = 窗口宽 / 原始宽
         var finalScale = Math.min(baseScale, windowWidth / designWidth);
         
-        // 应用 CSS 变换
+        // 5. 应用缩放变换
         gameDiv.style.width = designWidth + "px";
         gameDiv.style.height = designHeight + "px";
         gameDiv.style.transform = "scale(" + finalScale + ")";
         
-        // 关键：动态计算外层高度，防止缩放后下方留出巨大的黑边
-        container.style.height = (designHeight * finalScale) + "px";
+        // 6. 关键步骤：动态调整外层容器的高度
+        // 只有这样，高度才会随宽度等比例缩小，下方不会留黑边
+        wrapper.style.height = (designHeight * finalScale) + "px";
     }
 
-    // 监听窗口变化
+    // 监听窗口大小变化和页面加载
     window.addEventListener('resize', resizeGame);
     window.addEventListener('DOMContentLoaded', resizeGame);
   </script>
 </head>
 
 <body>
-<h1 class="header">Turtlediary | Educational Games</h1>
+<h1 class="header">Turtlediary | Kids Games</h1>
 
 <div id="GameWrapper">
   <div id="GameDiv">
