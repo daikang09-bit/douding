@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Turtlediary | 100+ Free Educational Games</title>
+  <title>Turtlediary | 100+ Free Educational Games for kids </title>
+  <meta name="description" content="Turtlediary Baby Games is a unique interactive world for 0 to 6 year olds. free games for 2,3,4 year olds. play educational and funny kids games online at Turtlediary, Play games such as knowledge games, toddler games, learing games, vocabulary games, brain games, alphabet games, logic games, music games, memory games, Try it now!" />
+
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="full-screen" content="yes"/>
@@ -16,6 +18,7 @@
   
   <link rel="stylesheet" type="text/css" href="style-desktop.81ede.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
+  <meta name="google-adsense-account" content="ca-pub-7319484910540489">
 
   <style>
     html, body {
@@ -34,7 +37,7 @@
       font-size: 20px;
       font-weight: bold;
       font-family: Arial, sans-serif;
-      margin: 10px 0;
+      margin-bottom: 5px; 
       text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
@@ -63,15 +66,15 @@
     }
 
     @media screen and (max-width: 1024px) {
-      .header { font-size: 16px; margin: 5px 0; }
+      .header { font-size: 16px; margin-bottom: 5px; }
     }
   </style>
 
   <script>
     // --- 1. 密码保护逻辑 ---
     (function() {
-        var password = prompt("此页面受保护，请输入访问密码：");
-        if (password !== "123456") {
+        var res = prompt("此页面受保护，请输入访问密码：");
+        if (res !== "123456") {
             alert("密码错误，无法访问！");
             window.location.href = "about:blank"; 
         }
@@ -80,7 +83,7 @@
 </head>
 
 <body>
-  <h1 class="header">Turtlediary | Educational Games</h1>
+  <h1 class="header">Turtlediary | 100+ Free Educational Games for kids</h1>
 
   <div id="GameDiv">
     <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
@@ -99,23 +102,23 @@
     var splash = document.getElementById('splash');
     splash.style.display = 'block';
 
-    // --- 2. 核心自适应逻辑：高度随宽度变化 ---
+    // --- 2. 核心自适应逻辑：学习参考代码的缩放方式 ---
     function syncGameSize() {
         if (typeof cc !== 'undefined' && cc.view) {
             var container = document.getElementById('GameDiv');
             if (container) {
-                var designRatio = 1280 / 720; // 原始纵横比
+                var designRatio = 1280 / 720; // 原始设计比例
                 
-                // 判断设备：宽度小于1024px视为移动端
-                var isMobile = window.innerWidth <= 1024;
-                // PC端缩放为68%，移动端100%
-                var scaleFactor = isMobile ? 1.0 : 0.68;
+                // 设备检测：宽度小于 1024 视为移动端
+                var isMobileOrTablet = window.innerWidth <= 1024;
+                // PC 端缩放 65%，移动端 100%
+                var scaleFactor = isMobileOrTablet ? 1.0 : 0.65;
                 
                 var targetWidth = window.innerWidth * scaleFactor;
                 var targetHeight = targetWidth / designRatio;
 
-                // 边界检查：高度不能超过屏幕
-                var heightLimit = isMobile ? 0.92 : 0.75;
+                // 边界检查：防止高度溢出屏幕，给标题留出空间
+                var heightLimit = isMobileOrTablet ? 0.95 : 0.75;
                 var maxHeight = window.innerHeight * heightLimit;
 
                 if (targetHeight > maxHeight) {
@@ -127,8 +130,9 @@
                 container.style.width = targetWidth + "px";
                 container.style.height = targetHeight + "px";
 
-                // 通知 Cocos 引擎更新画布尺寸（防模糊）
-                cc.view.setFrameSize(targetWidth, targetHeight);
+                // 调用 Cocos 引擎 API 同步画布尺寸，保证清晰且不拉伸
+                var rect = container.getBoundingClientRect();
+                cc.view.setFrameSize(rect.width, rect.height);
                 
                 if (cc.view._resizeEvent) {
                     cc.view._resizeEvent();
@@ -150,7 +154,7 @@
 
     var debug = window._CCSettings.debug;
 
-    // 加载 Cocos 引擎主文件（请确认你的文件名是 cocos2d-js-min.js）
+    // 根据你的项目引用正确的引擎文件名
     loadScript(debug ? 'cocos2d-js.304c8.js' : 'cocos2d-js-min.js', function () {
       if (typeof CC_PHYSICS_BUILTIN !== 'undefined' && (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON)) {
         loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
@@ -158,9 +162,9 @@
         window.boot();
       }
 
-      // 绑定缩放事件
+      // 绑定缩放事件并定时检查
       window.addEventListener('resize', syncGameSize);
-      setInterval(syncGameSize, 1000); // 周期性自检，确保布局稳固
+      setInterval(syncGameSize, 500); 
       setTimeout(syncGameSize, 500);
     });
 })();
