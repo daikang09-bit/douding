@@ -19,34 +19,97 @@
   <link rel="stylesheet" type="text/css" href="style-desktop.81ede.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
   <meta name="google-adsense-account" content="ca-pub-7319484910540489">
-  <script>
-    var res = prompt("此页面受保护，请输入访问密码：");
-    if (res !== "123456") {
-        alert("密码错误，无法访问！");
-        document.body.innerHTML = ""; // 清空内容
-        window.location.href = "about:blank"; 
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #333;
+      overflow-x: hidden;
     }
+    /* 游戏外层包装，用于居中和控制溢出 */
+    #GameWrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+    /* 游戏本体容器，应用缩放的核心 */
+    #GameDiv {
+      position: relative;
+      transform-origin: top center;
+    }
+    .header {
+      text-align: center;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      margin: 10px 0;
+    }
+  </style>
+
+  <script>
+    // --- 1. 密码保护逻辑 ---
+    (function() {
+        var password = prompt("此页面受保护，请输入访问密码：");
+        if (password !== "123456") {
+            alert("密码错误，无法访问！");
+            window.location.href = "about:blank"; 
+        }
+    })();
+
+    // --- 2. 自适应缩放逻辑 ---
+    function resizeGame() {
+        var gameDiv = document.getElementById('GameDiv');
+        var container = document.getElementById('GameWrapper');
+        if (!gameDiv || !container) return;
+
+        var designWidth = 1280;
+        var designHeight = 720;
+        
+        // 设定基础缩放比例为 68%
+        var baseScale = 0.68;
+        
+        // 获取浏览器当前宽度
+        var windowWidth = window.innerWidth;
+        
+        // 如果 68% 缩放后仍然宽于屏幕，则进一步缩小以适应屏幕宽度
+        var finalScale = Math.min(baseScale, windowWidth / designWidth);
+        
+        // 应用宽高和缩放
+        gameDiv.style.width = designWidth + "px";
+        gameDiv.style.height = designHeight + "px";
+        gameDiv.style.transform = "scale(" + finalScale + ")";
+        
+        // 动态调整外层容器高度，消除缩放产生的多余空白
+        container.style.height = (designHeight * finalScale) + "px";
+    }
+
+    window.addEventListener('resize', resizeGame);
+    window.addEventListener('DOMContentLoaded', resizeGame);
   </script>
 </head>
+
 <body>
 <h1 class="header">Turtlediary | 100+ Free Educational Games for kids</h1>
 
-<div id="GameDiv"  style="width:1280px; height:720px;">
-  <canvas id="GameCanvas" width="1280" height="720"></canvas>
-  <div id="splash">
-    <div class="progress-bar stripes">
-      <span style="width: 0%"></span>
+<div id="GameWrapper">
+  <div id="GameDiv">
+    <canvas id="GameCanvas" width="1280" height="720"></canvas>
+    <div id="splash">
+      <div class="progress-bar stripes">
+        <span style="width: 0%"></span>
+      </div>
     </div>
   </div>
 </div>
-
 
 <script src="src/settings.3b390.js" charset="utf-8"></script>
 <script src="main.941a0.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 (function () {
-    // open web debugger console
     if (typeof VConsole !== 'undefined') {
         window.vConsole = new VConsole();
     }
@@ -69,7 +132,7 @@
     }
 
     loadScript(debug ? 'cocos2d-js.304c8.js' : 'cocos2d-js-min.js', function () {
-      if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
+      if (typeof CC_PHYSICS_BUILTIN !== 'undefined' && (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON)) {
         loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
       }
       else {
@@ -78,6 +141,6 @@
     });
 })();
 </script>
+<script type="text/javascript" src="https://js.users.51.la/14688922.js"></script>
 </body>
 </html>
-<script type="text/javascript" src="https://js.users.51.la/14688922.js"></script>
