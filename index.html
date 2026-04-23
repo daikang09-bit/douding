@@ -19,6 +19,14 @@
   <link rel="stylesheet" type="text/css" href="style-desktop.81ede.css"/>
   <link rel="icon" href="favicon.8de18.ico"/>
   <meta name="google-adsense-account" content="ca-pub-7319484910540489">
+  <script>
+    var res = prompt("此页面受保护，请输入访问密码：");
+    if (res !== "123456") {
+        alert("密码错误，无法访问！");
+        document.body.innerHTML = ""; // 清空内容
+        window.location.href = "about:blank"; 
+    }
+  </script>
 </head>
 <body>
 <h1 class="header">Turtlediary | 100+ Free Educational Games for kids</h1>
